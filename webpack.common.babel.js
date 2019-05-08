@@ -1,15 +1,18 @@
-const isProduction = process.env.NODE_ENV === 'production';
 const path = require('path');
 const webpack = require('webpack');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   context: path.resolve(__dirname,'src'),
-  entry: './bundle.js',
+
+  entry: {
+    app: path.resolve(__dirname, 'src', 'bundle.js'),
+  },
 
   output: {
+    filename: '[name].bundle.js',
     path: path.resolve(__dirname, 'static'),
-    publicPath: '/',
-    filename: 'bundle.min.js'
   },
 
   resolve: {
@@ -18,7 +21,6 @@ module.exports = {
 
     alias: {
       '_srcCommon': path.resolve(__dirname, 'src', 'common'),
-      '_srcConfig$': isProduction ? path.resolve(__dirname, 'src', 'config', 'prodConfig') : path.resolve(__dirname, 'src', 'config', 'devConfig'),
       '_srcMainPage': path.resolve(__dirname, 'src', 'mainPage')
     }
   },
@@ -49,17 +51,31 @@ module.exports = {
 
   plugins: ([
     new webpack.DefinePlugin({
-      'process': JSON.stringify({
-        browser: true,
-        env: {
-          NODE_ENV: process.env.NODE_ENV
-        }
-      }),
-      '__DEV__': isProduction ? 'true' : 'false'
+      'process.browser': JSON.stringify(true),
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
+    }),
+    new CleanWebpackPlugin({
+      cleanOnceBeforeBuildPatterns: [
+        '**/node_vendors~app.bundle.js',
+        '**/bundle.min.css',
+        '**/app.bundle.js',
+        '**/bundle.min.js.map*'
+      ],
+      cleanAfterEveryBuildPatterns: [
+        '**/node_vendors~app.bundle.js',
+        '**/bundle.min.css',
+        '**/app.bundle.js',
+        '**/bundle.min.js.map*'
+      ]
+    }),
+    new HtmlWebpackPlugin({
+      title: 'Lizard Post'
     })
   ]),
 
-  stats: { colors: true },
+  stats: {
+    colors: true
+  },
 
   node: {
     global: true,
@@ -68,15 +84,5 @@ module.exports = {
     __filename: false,
     __dirname: false,
     setImmediate: false
-  },
-
-  devtool: isProduction ? 'source-map' : 'cheap-module-eval-source-map',
-
-  devServer: {
-    port: process.env.PORT || 3000,
-    publicPath: '/',
-    contentBase: './static',
-    historyApiFallback: true,
-    proxy: {}
   }
 };

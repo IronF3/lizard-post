@@ -43,8 +43,9 @@ gulp.task('less', function() {
 gulp.task('deploy', function() {
   let buildSrc = path.join(__dirname, 'static', '**', '*');
   console.log(buildSrc);
-  return src(buildSrc).pipe(ghPages({
-    remoteUrl: 'https://github.com/PUT_REPO_HERE'
+  return gulp.src(buildSrc).pipe(ghPages({
+    branch: 'master',
+    remoteUrl: 'https://github.com/IronF3/lizard-post.git'
   }))
 });
 
