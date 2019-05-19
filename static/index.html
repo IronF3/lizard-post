@@ -1,12 +1,20 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <title>Lizard Post</title>
-    <link rel="stylesheet" href="bundle.min.css">
-  </head>
-  <body>
-    <script type="text/javascript" src="node_vendors~app.bundle.js"></script>
-    <script type="text/javascript" src="app.bundle.js"></script>
-  </body>
+
+<head>
+  <meta charset="UTF-8">
+  <title>Lizard Post</title>
+  <link rel="stylesheet" href="css/bundle.min.css" />
+</head>
+
+<body>
+  <div id='everything'>
+    <h1> Loading... </h1>
+  </div>
+  <script type="text/javascript" src="js/bundle.js"></script>
+  <script type="text/javascript">
+    window.renderApp(document.getElementById('everything'));
+  </script>
+</body>
+
 </html>
